@@ -97,6 +97,9 @@ class BreathingPhraseListWt(QtWidgets.QWidget):
         self.move_up_down(mc.model.MoveDirectionEnum.down)
 
     def move_up_down(self, i_up_down: mc.model.MoveDirectionEnum):
+        if mc.mc_global.active_phrase_id_it == mc.mc_global.NO_PHRASE_SELECTED_INT:
+            logging.debug("No breathing phrase selected")
+            return
         mc.model.PhrasesM._update_sort_order_move_up_down(
             mc.mc_global.active_phrase_id_it,
             i_up_down
@@ -105,6 +108,9 @@ class BreathingPhraseListWt(QtWidgets.QWidget):
         self.update_selected()
 
     def on_move_to_top_clicked(self):
+        if mc.mc_global.active_phrase_id_it == mc.mc_global.NO_PHRASE_SELECTED_INT:
+            logging.debug("No breathing phrase selected")
+            return
         while True:
             result_bool = mc.model.PhrasesM._update_sort_order_move_up_down(
                 mc.mc_global.active_phrase_id_it,
@@ -125,6 +131,9 @@ class BreathingPhraseListWt(QtWidgets.QWidget):
                 return
 
     def on_edit_texts_clicked(self):
+        if mc.mc_global.active_phrase_id_it == mc.mc_global.NO_PHRASE_SELECTED_INT:
+            logging.warning("Edit clicked when no phrase was selected")
+            return
         EditDialog.launch_edit_dialog()
         self.phrase_changed_signal.emit(True)
 
@@ -250,10 +259,6 @@ class EditDialog(QtWidgets.QDialog):
         super(EditDialog, self).__init__(i_parent)
 
         self.updating_gui_bool = False
-
-        # If a phrase is not selected, default to phrase with id 1
-        if mc.mc_global.active_phrase_id_it == mc.mc_global.NO_PHRASE_SELECTED_INT:
-            mc.mc_global.active_phrase_id_it = 1
 
         active_phrase = mc.model.PhrasesM.get(mc.mc_global.active_phrase_id_it)
 

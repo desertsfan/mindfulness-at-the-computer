@@ -73,6 +73,9 @@ class RestActionListWt(QtWidgets.QWidget):
         self.update_gui()
 
     def on_edit_texts_clicked(self):
+        if mc.mc_global.active_rest_action_id_it == mc.mc_global.NO_REST_ACTION_SELECTED_INT:
+            logging.warning("Edit clicked when no rest action was selected")
+            return
         EditDialog.launch_edit_dialog()
         self.update_signal.emit()
 
@@ -91,6 +94,8 @@ class RestActionListWt(QtWidgets.QWidget):
         self.update_selected()
 
     def on_move_to_top_clicked(self):
+        if mc_global.active_rest_action_id_it == mc_global.NO_REST_ACTION_SELECTED_INT:
+            return
         id_int = mc_global.active_rest_action_id_it
         while True:
             result_bool = model.RestActionsM.update_sort_order_move_up_down(
