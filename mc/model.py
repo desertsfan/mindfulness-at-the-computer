@@ -305,7 +305,7 @@ class RestActionsM:
 
     def _update(self, i_col_name: str, i_new_value):
         db_exec(
-            "UPDATE " + db.Schema.PhrasesTable.name
+            "UPDATE " + db.Schema.RestActionsTable.name
             + " SET " + i_col_name + " = ?"
             + " WHERE " + db.Schema.PhrasesTable.Cols.id + " = ?",
             (i_new_value, str(self._id_int))
@@ -313,7 +313,7 @@ class RestActionsM:
 
     @staticmethod
     def add(i_title: str, i_image_path: str) -> None:
-        vertical_order_last_pos_int = RestActionsM._get_highest_or_lowest_sort_value(MinOrMaxEnum.max)
+        vertical_order_last_pos_int = RestActionsM._get_highest_or_lowest_sort_value(MinOrMaxEnum.max) + 1
         db_exec(
             "INSERT INTO " + db.Schema.RestActionsTable.name + "("
             + db.Schema.RestActionsTable.Cols.vertical_order + ", "
@@ -357,7 +357,7 @@ class RestActionsM:
     @staticmethod
     def update_sort_order_move_up_down(i_id: int, i_move_direction: MoveDirectionEnum) -> bool:
         main_id_int = i_id
-        main_sort_order_int = RestActionsM.get(i_id)._vert_order_int
+        main_sort_order_int = RestActionsM.get(i_id).vert_order
         if i_move_direction == MoveDirectionEnum.up:
             if (main_sort_order_int <= RestActionsM._get_highest_or_lowest_sort_value(MinOrMaxEnum.min)
             or main_sort_order_int > RestActionsM._get_highest_or_lowest_sort_value(MinOrMaxEnum.max)):
